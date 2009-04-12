@@ -157,6 +157,10 @@ public class EmpiricalUnigramLanguageModel implements LanguageModel {
   public void updateWordProbability(String word, double probability) {
 		return;
 	}
+  
+  public Counter<String> getWordCount(){ 
+	  return wordCounter ; 
+  }
 }
 
 
