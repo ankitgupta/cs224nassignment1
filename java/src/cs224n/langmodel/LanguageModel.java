@@ -24,5 +24,7 @@ public interface LanguageModel {
 
 	public void updateWordProbability(String word, double probability);
 	
-	public Counter<String> getWordCount(); 
+	public Counter<String> getWordCounter(); 
+
+	public Counter<String> getUnigramCounter(); 
 }
