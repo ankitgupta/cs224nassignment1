@@ -185,7 +185,7 @@ public class LanguageModelTester {
 
     // set up default options ..............................................
     Map<String, String> options = new HashMap<String, String>();
-    options.put("-data",      "/afs/ir/class/cs224n/pa1/data");
+    options.put("-data",      "../../data");
     options.put("-train",     "europarl-train.sent.txt");
     options.put("-valid",     "europarl-valid.sent.txt");
     options.put("-test",      "europarl-test.sent.txt");
