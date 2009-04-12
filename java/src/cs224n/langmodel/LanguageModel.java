@@ -20,4 +20,5 @@ public interface LanguageModel {
 
   public List<String> generateSentence();
 
+  public void updateWordProbability(String word, double probability);
 }

@@ -154,6 +154,9 @@ public class EmpiricalUnigramLanguageModel implements LanguageModel {
     return sentence;
   }
 
+  public void updateWordProbability(String word, double probability) {
+		return;
+	}
 }
 
 
