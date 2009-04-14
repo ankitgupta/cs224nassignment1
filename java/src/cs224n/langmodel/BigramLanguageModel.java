@@ -9,6 +9,7 @@ import java.util.List;
 
 import cs224n.smoother.LaplaceSmoothing;
 import cs224n.util.Counter;
+import cs224n.util.CounterMap;
 
 /**
  * @author ankit
@@ -151,9 +152,9 @@ public class BigramLanguageModel implements LanguageModel {
 
 	}
 
-	public Counter<String> getWordCounter() {
+	public CounterMap<String, String> getBigramCounter() {
 		// TODO Auto-generated method stub
-		return bigramCounter;
+		return null;
 	}
 
 	public Counter<String> getUnigramCounter() {

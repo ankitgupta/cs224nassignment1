@@ -1,6 +1,7 @@
 package cs224n.langmodel;
 
 import cs224n.util.Counter;
+import cs224n.util.CounterMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -158,8 +159,8 @@ public class EmpiricalUnigramLanguageModel implements LanguageModel {
 		return;
 	}
 
-	public Counter<String> getWordCounter(){ 
-		return wordCounter ; 
+	public CounterMap<String, String> getBigramCounter(){ 
+		return null ; 
 	}
 
 	public Counter<String> getUnigramCounter() {

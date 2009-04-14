@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import cs224n.util.Counter;
+import cs224n.util.CounterMap;
 
 /**
  * Language models assign probabilities to sentences and generate sentences.
@@ -24,7 +25,7 @@ public interface LanguageModel {
 
 	public void updateWordProbability(String word, double probability);
 	
-	public Counter<String> getWordCounter(); 
+	public CounterMap<String, String> getBigramCounter(); 
 
 	public Counter<String> getUnigramCounter(); 
 }
