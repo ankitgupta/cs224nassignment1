@@ -173,18 +173,14 @@ public class EmpiricalUnigramLanguageModel implements LanguageModel {
 		return;
 	}
 
-	public Counter<String> getWordCounter(){ 
-		return wordCounter ; 
+	public CounterMap<String, String> getBigramCounter(){ 
+		return null ; 
 	}
 
 	public Counter<String> getUnigramCounter() {
 		return wordCounter;	
 	}
 
-	public CounterMap<String, String> getBigramCounter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
 
 

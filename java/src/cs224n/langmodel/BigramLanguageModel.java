@@ -270,7 +270,7 @@ public class BigramLanguageModel implements LanguageModel {
 
 	public CounterMap<String, String> getBigramCounter() {
 		// TODO Auto-generated method stub
-		return bigramCounter;
+		return null;
 	}
 
 	public Counter<String> getUnigramCounter() {
