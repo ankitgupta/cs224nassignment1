@@ -34,9 +34,9 @@ public class BigramLanguageModel implements LanguageModel {
 	public double checkModel() {
 //		if (true)
 //		return 1.0 ; 
-		
+
 		// TODO Auto-generated method stub
-		
+
 		int nsamples = 1;
 		int i=0;
 
@@ -47,21 +47,18 @@ public class BigramLanguageModel implements LanguageModel {
 			for (String w2 : unigramCounter.keySet()) {
 				double p = getWordProbability( w1, w2) ; 
 				probability += p;
-				/*if (p <= 0.00000000000000001){
-					System.out.println(w1+ " : " + w2 + "has count = 0 " );
-				}*/
 			}
-			
-			
-			
+
+
+
 			// Grouping technique 
-/*			for (String w2 : bigramCounter.getCounter(w1).keySet() ) {
+			/*			for (String w2 : bigramCounter.getCounter(w1).keySet() ) {
 				probability += getWordProbability( w1, w2);
 			}
 			probability += (1)/  (1.0 + (double) unigramCounter.getCount( w1));*/
 			// End of Grouping technique 
-			
-			
+
+
 			if(Math.abs(probability - 1) > tolerance)
 				return probability;
 			if (i==nsamples)
@@ -115,16 +112,16 @@ public class BigramLanguageModel implements LanguageModel {
 	}
 
 	public double getWordProbabilityCustomSmoothing(String w1, String w2) {
-		
+
 		//CustomSmoothing
-		
+
 //		double absoluteDiscounting = 0.75 ; 
 		double bigramcount = bigramCounter.getCount(w1, w2);
 		double unigramcount = unigramCounter.getCount( w1);
 		double probability = 0.0 ; 
 		double vocab  = unigramCounter.size() ;
 		double numBigramsWithZeroCount =   vocab - (bigramCounter.getCounter(w1)).size();
-//			unigramCounter.size()*unigramCounter.size() - bigramCounter.size() ;
+//		unigramCounter.size()*unigramCounter.size() - bigramCounter.size() ;
 		if (bigramcount > 0) {
 			probability=  ( ((double)bigramcount) / (   1.0 + (double)unigramcount));
 		} else { 
@@ -142,25 +139,25 @@ public class BigramLanguageModel implements LanguageModel {
 		double probability = 0.0 ; 
 		double vocab  = unigramCounter.size() ;
 		double numBigramsWithZeroCount =   vocab - (bigramCounter.getCounter(w1)).size();
-//			unigramCounter.size()*unigramCounter.size() - bigramCounter.size() ;
+//		unigramCounter.size()*unigramCounter.size() - bigramCounter.size() ;
 		if (  (unigramCounter.getCount( w1) == 0)){
 			probability = 1/vocab ; 
 			return probability ; 
 		}
-		
+
 		if (bigramcount > 0) {
 			probability=  ( ((double)bigramcount - discount) / ( (double)unigramcount));
 		} else { 
 			probability = ( ( discount*(bigramCounter.getCounter(w1)).size() )/numBigramsWithZeroCount)/  ((double) unigramcount);
 //			probability = ( 1/numBigramsWithZeroCount)/  ( 1 + (double) unigramcount);
 		}
-			if (probability <= 0.000000000000000000000001){
-				System.out.println(w1 + " " + w2 + " has probability = " + probability);
-			}
+		if (probability <= 0.000000000000000000000001){
+			System.out.println(w1 + " " + w2 + " has probability = " + probability);
+		}
 		return probability ;
 	}
 
-	
+
 	public double getWordProbabilityLaplaceSmoothing(String w1, String w2) {
 
 		// LaplaceSmoothing
@@ -169,8 +166,8 @@ public class BigramLanguageModel implements LanguageModel {
 		double probability = 0.0 ; 
 		double vocab  = unigramCounter.size() ;
 //		double numBigramsWithZeroCount =   vocab - (bigramCounter.getCounter(w1)).size();
-//			unigramCounter.size()*unigramCounter.size() - bigramCounter.size() ;
-	
+//		unigramCounter.size()*unigramCounter.size() - bigramCounter.size() ;
+
 		if (  (unigramCounter.getCount( w1) == 0)){
 			probability = 1/vocab ; 
 			return probability ; 
@@ -179,7 +176,7 @@ public class BigramLanguageModel implements LanguageModel {
 		return probability ;
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see cs224n.langmodel.LanguageModel#getWordProbability(java.util.List, int)
 	 */
@@ -228,7 +225,7 @@ public class BigramLanguageModel implements LanguageModel {
 				isFirstWord = false ;
 			}
 		} 
-		
+
 		for (Iterator iterator = bigramCounter.keySet().iterator(); iterator.hasNext();) {
 			String w1 = (String) iterator.next();
 			Counter<String> counter = bigramCounter.getCounter(w1);
@@ -244,9 +241,9 @@ public class BigramLanguageModel implements LanguageModel {
 //		List<LanguageModel> langmodels = new ArrayList<LanguageModel>();
 //		langmodels.add(this);
 //		new LaplaceSmoothing().smooth(langmodels);
-		
-		
-		
+
+
+
 	}		
 //	total = bigramCounter.totalCount();
 //	List<LanguageModel> langmodels = new ArrayList<LanguageModel>();

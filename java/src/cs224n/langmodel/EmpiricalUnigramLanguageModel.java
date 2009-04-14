@@ -17,6 +17,7 @@ import java.util.List;
 public class EmpiricalUnigramLanguageModel implements LanguageModel {
 
 	private static final String STOP = "</S>";
+	private static final String UNKNOWN = "**UNKNOWN**";
 
 	private Counter<String> wordCounter;
 	private double total;
@@ -61,6 +62,8 @@ public class EmpiricalUnigramLanguageModel implements LanguageModel {
 				wordCounter.incrementCount(word, 1.0);
 			}
 		}
+		
+		wordCounter.incrementCount(UNKNOWN, 1.0);
 		total = wordCounter.totalCount();
 	}
 
@@ -69,11 +72,16 @@ public class EmpiricalUnigramLanguageModel implements LanguageModel {
 
 	private double getWordProbability(String word) {
 		double count = wordCounter.getCount(word);
+//		double vocab = wordCounter.keySet().size();
+//		double discount = 0.75 ; 
+//		double numberOfZeros = total - wordCounter.keySet().size() ;
+		
 		if (count == 0) {                   // unknown word
 			// System.out.println("UNKNOWN WORD: " + sentence.get(index));
-			return 1.0 / (total + 1.0);
+			return 1.0 / (total  );
 		}
-		return count / (total + 1.0);
+		return count / (total );
+		
 	}
 
 	/**
@@ -115,10 +123,16 @@ public class EmpiricalUnigramLanguageModel implements LanguageModel {
 		for (String word : wordCounter.keySet()) {
 			sum += getWordProbability(word);
 		}
+		
+		double tolerance = 0.005 ; 
+		if(Math.abs(sum - 1) < tolerance){
+			sum = 1.0 ;
+		} 
+//		return sum;
 
 		// remember to add the UNK. In this EmpiricalUnigramLanguageModel
 		// we assume there is only one UNK, so we add...
-		sum += 1.0 / (total + 1.0);
+//		sum += 1.0 / (total + 1.0);
 
 		return sum;
 	}
@@ -138,7 +152,7 @@ public class EmpiricalUnigramLanguageModel implements LanguageModel {
 				return word;
 			}
 		}
-		return "*UNKNOWN*";   // a little probability mass was reserved for unknowns
+		return UNKNOWN;   // a little probability mass was reserved for unknowns
 	}
 
 	/**
