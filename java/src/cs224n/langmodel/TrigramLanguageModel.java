@@ -30,7 +30,7 @@ public class TrigramLanguageModel implements LanguageModel {
 	public double checkModel() {
 		// TODO Auto-generated method stub
 		
-		int nsamples = 5;
+		int nsamples = 50;
 		double tolerance = 0.005;
 		String firstword;
 		Iterator<String> iter = trigramCounter.keySet().iterator();
@@ -126,6 +126,14 @@ public class TrigramLanguageModel implements LanguageModel {
 		if(index >= 2)
 			firstword = sentence.get(index-2);
 		String currentword = sentence.get(index);
+//		return getWordProbability(firstword, secondword, currentword);
+//		return getWordProbabilityDiscountSmoothing(firstword, secondword, currentword);
+//		return getWordProbabilityCustomSmoothing(firstword, secondword, currentword);
+		return getWordProbabilityLaplaceSmoothing(firstword, secondword, currentword);
+	}
+
+	public double getWordProbabilityLaplaceSmoothing(String firstword, String secondword, String thirdword) {
+		// Laplace Smoothing
 		double numerator;
 		if(!trigramCounter.containsKey(firstword)) {
 			return 1.0/(bigramCounter.keySet().size() + 1.0);
@@ -133,14 +141,67 @@ public class TrigramLanguageModel implements LanguageModel {
 		if(!trigramCounter.get(firstword).keySet().contains(secondword)) {
 			return 1.0/(bigramCounter.keySet().size() + 1.0);			
 		}
-		numerator = trigramCounter.get(firstword).getCount(secondword, currentword);
+		numerator = trigramCounter.get(firstword).getCount(secondword, thirdword);
+		double denominator = bigramCounter.getCount(firstword, secondword);
+		if(numerator == 0)
+			return 1.0 / (denominator + bigramCounter.keySet().size() + 1.0);
+		
+		return (numerator + 1.0) / (denominator + bigramCounter.keySet().size() + 1.0);
+	}
+
+	public double getWordProbabilityDiscountSmoothing(String firstword, String secondword, String thirdword) {
+		// Discount Smoothing
+
+		double discount = 0.70; 
+
+		double numerator;
+		if(!trigramCounter.containsKey(firstword)) {
+			return 1.0/(bigramCounter.keySet().size() + 1.0);
+		}
+		if(!trigramCounter.get(firstword).keySet().contains(secondword)) {
+			return 1.0/(bigramCounter.keySet().size() + 1.0);			
+		}
+		numerator = trigramCounter.get(firstword).getCount(secondword, thirdword);
+		double denominator = bigramCounter.getCount(firstword, secondword);
+		if(numerator == 0)
+			return discount*trigramCounter.get(firstword).getCounter(secondword).keySet().size() / ((bigramCounter.keySet().size() - trigramCounter.get(firstword).getCounter(secondword).keySet().size()) * (denominator + 1.0));
+		
+		return (numerator - discount) / (denominator + 1.0);
+	}
+
+	public double getWordProbabilityCustomSmoothing(String firstword, String secondword, String thirdword) {
+		double numerator;
+		if(!trigramCounter.containsKey(firstword)) {
+			return 1.0/(bigramCounter.keySet().size() + 1.0);
+		}
+		if(!trigramCounter.get(firstword).keySet().contains(secondword)) {
+			return 1.0/(bigramCounter.keySet().size() + 1.0);			
+		}
+		numerator = trigramCounter.get(firstword).getCount(secondword, thirdword);
+		double denominator = bigramCounter.getCount(firstword, secondword);
+		if(numerator == 0)
+			return 1.0 / ((bigramCounter.keySet().size() - trigramCounter.get(firstword).getCounter(secondword).keySet().size())*(denominator + 2.0));
+		
+		return numerator / (denominator + 2.0);
+
+	}
+
+	public double getWordProbability(String firstword, String secondword, String thirdword) {
+		double numerator;
+		if(!trigramCounter.containsKey(firstword)) {
+			return 1.0/(bigramCounter.keySet().size() + 1.0);
+		}
+		if(!trigramCounter.get(firstword).keySet().contains(secondword)) {
+			return 1.0/(bigramCounter.keySet().size() + 1.0);			
+		}
+		numerator = trigramCounter.get(firstword).getCount(secondword, thirdword);
 		double denominator = bigramCounter.getCount(firstword, secondword);
 		if(numerator == 0)
 			return 1.0 / (denominator + 1.0);
 		
 		return numerator / (denominator + 1.0);
-	}
 
+	}
 	/* (non-Javadoc)
 	 * @see cs224n.langmodel.LanguageModel#train(java.util.Collection)
 	 */
@@ -167,10 +228,6 @@ public class TrigramLanguageModel implements LanguageModel {
 				secondword = word;
 			}
 		}
-//		System.out.println("\nStarting Smoothing");
-//		List<LanguageModel> langmodels = new ArrayList<LanguageModel>();
-//		langmodels.add(this);
-//		new LaplaceSmoothing().smooth(langmodels);
 	}
 
 	/* (non-Javadoc)

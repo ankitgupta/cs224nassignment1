@@ -12,7 +12,6 @@ import cs224n.langmodel.LanguageModel;
 import cs224n.langmodel.TrigramLanguageModel;
 import cs224n.util.Counter;
 import cs224n.util.CounterMap;
-import cs224n.util.Pair;
 
 /**
  * @author ankit
@@ -25,10 +24,11 @@ public class LaplaceSmoothing implements SmoothingScheme {
 	 */
 	public void smooth(Collection<LanguageModel> languageModels) {
 		// TODO Auto-generated method stub
-		TrigramLanguageModel current = (TrigramLanguageModel)languageModels.iterator().next();
+		LanguageModel current = languageModels.iterator().next();
 		if(current.getClass() == TrigramLanguageModel.class) {
+			TrigramLanguageModel currentModel = (TrigramLanguageModel)current;
 			CounterMap<String, String> bigramCounter = current.getBigramCounter();
-			HashMap<String, CounterMap<String, String>> trigramCounter = current.getTrigramCounter();
+			HashMap<String, CounterMap<String, String>> trigramCounter = currentModel.getTrigramCounter();
 			
 			for(String firstword : bigramCounter.keySet()) {
 				if(!trigramCounter.containsKey(firstword)) {
@@ -40,6 +40,17 @@ public class LaplaceSmoothing implements SmoothingScheme {
 					}
 					bigramCounter.incrementCount(firstword, secondword, bigramCounter.keySet().size());
 				}
+			}
+		}
+		if(current.getClass() == BigramLanguageModel.class) {
+			Counter<String> unigramCounter = current.getUnigramCounter();
+			CounterMap<String,String> bigramCounter = current.getBigramCounter();
+			
+			for(String w1 : unigramCounter.keySet()) {
+				for(String w2 : unigramCounter.keySet()) {
+					bigramCounter.incrementCount(w1, w2, 1.0);
+				}
+				unigramCounter.incrementCount(w1, unigramCounter.size());
 			}
 		}
 

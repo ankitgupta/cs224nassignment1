@@ -25,7 +25,11 @@ public interface LanguageModel {
 
 	public void updateWordProbability(String word, double probability);
 	
-	public CounterMap<String, String> getBigramCounter(); 
+//	public Counter<String> getWordCounter(); 
 
 	public Counter<String> getUnigramCounter(); 
+	
+	public CounterMap<String, String> getBigramCounter(); 
+	
+//	public Counter<String> getTrigramCounter(); 
 }
