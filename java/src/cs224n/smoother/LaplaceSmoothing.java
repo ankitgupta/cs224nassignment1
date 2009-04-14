@@ -9,6 +9,7 @@ import java.util.Iterator;
 import cs224n.langmodel.BigramLanguageModel;
 import cs224n.langmodel.LanguageModel;
 import cs224n.util.Counter;
+import cs224n.util.CounterMap;
 
 /**
  * @author ankit
@@ -24,16 +25,13 @@ public class LaplaceSmoothing implements SmoothingScheme {
 		LanguageModel current = languageModels.iterator().next();
 		if(current.getClass() == BigramLanguageModel.class) {
 			Counter<String> unigramCounter = current.getUnigramCounter();
-			Counter<String> bigramCounter = current.getWordCounter();
+			CounterMap<String,String> bigramCounter = current.getBigramCounter();
+			
 			for(String w1 : unigramCounter.keySet()) {
-				if(w1.equals(BigramLanguageModel.STOP))
-					continue;
 				for(String w2 : unigramCounter.keySet()) {
-					if(w2.equals(BigramLanguageModel.START))
-						continue;
-					bigramCounter.incrementCount(w1+" "+w2, bigramCounter.getCount(w1+" "+w2) + 1.0);
+					bigramCounter.incrementCount(w1, w2, 1.0);
 				}
-				unigramCounter.incrementCount(w1, unigramCounter.keySet().size()-1);
+				unigramCounter.incrementCount(w1, unigramCounter.size());
 			}
 		}
 	}
